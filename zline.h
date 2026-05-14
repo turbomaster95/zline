@@ -10,12 +10,18 @@
 // Just follow the License terms and credit this project in your code :) 
 
 #ifdef ZL_FREESTANDING
-    typedef long long ssize_t; 
+    #ifndef __linux__ 
+       typedef long long ssize_t;
+       typedef unsigned long long size_t;
+       extern ssize_t write(int fd, const void* buf, size_t n);
+       extern ssize_t read(int fd, void* buf, size_t n);
+    #else
+       #include <sys/types.h>
+       #include <unistd.h>
+    #endif
 
     extern void* malloc(size_t size);
     extern void  free(void* ptr);
-    extern ssize_t write(int fd, const void* buf, size_t n);
-    extern ssize_t read(int fd, void* buf, size_t n);
 
     static size_t zl_strlen(const char *s) {
         size_t n = 0; while (s[n]) n++; return n;
