@@ -12,7 +12,7 @@
 #ifdef ZL_FREESTANDING
     #ifndef __linux__ 
        typedef long long ssize_t;
-       typedef unsigned long long size_t;
+
        extern ssize_t write(int fd, const void* buf, size_t n);
        extern ssize_t read(int fd, void* buf, size_t n);
     #else
@@ -20,8 +20,12 @@
        #include <unistd.h>
     #endif
 
-    extern void* malloc(size_t size);
-    extern void  free(void* ptr);
+    #ifndef ZL_MALLOC
+        extern void* malloc(size_t size);
+    #endif
+    #ifndef ZL_FREE
+        extern void  free(void* ptr);
+    #endif
 
     static size_t zl_strlen(const char *s) {
         size_t n = 0; while (s[n]) n++; return n;
